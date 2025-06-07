@@ -3,9 +3,9 @@ use super::*;
 const EXP_NO_CONFIG_FILE_FOUND_ERROR_CODE: i32 = 3;
 
 const EXP_VERSION: &str = env!("CARGO_PKG_VERSION");
-const EXP_HOOK_FILE_TEMPLATE: &str = include_str!("hook_files/hook_script.sh");
-const EXP_HOOK_CLI_SCRIPT_FILE_TEMPLATE: &str = include_str!("hook_files/cli.sh");
-const EXP_HOOK_SEMVER_SCRIPT_FILE_TEMPLATE: &str = include_str!("hook_files/semver.sh");
+const EXP_HOOK_FILE_TEMPLATE: &str = include_str!("files/hook_script.sh");
+const EXP_HOOK_CLI_SCRIPT_FILE_TEMPLATE: &str = include_str!("files/cli.sh");
+const EXP_HOOK_SEMVER_SCRIPT_FILE_TEMPLATE: &str = include_str!("files/semver.sh");
 
 const EXP_HOOK_NAMES: [&str; 19] = [
     "applypatch-msg",

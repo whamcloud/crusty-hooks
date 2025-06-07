@@ -1,8 +1,8 @@
 [package]
-name = "rusty-hook-lib"
+name = "rusty-hook"
 version = "0.12.0"
 authors = ["Kai Mast <kai@kaimast.com>", "Swellaby <opensource@swellaby.com>"]
-description = "Utility functions for rusty-hook"
+description = "git hook utility"
 license = "MIT"
 repository = "https://github.com/kaimast/rusty-hook"
 readme = "README.md"
@@ -12,12 +12,7 @@ categories = [ "development-tools" ]
 rust-version = "1.82"
 
 [dependencies]
-toml = "0.5"
-
-[build-dependencies]
-ci_info = "0.14"
-toml = "0.5"
+ci_info = "0.14.5"
 nias = "0.7"
-
-[workspace]
-members = ["cmd"]
+rusty-hook = { path="..", package="rusty-hook-lib" }
+clap = { version="3", features=["derive"] }

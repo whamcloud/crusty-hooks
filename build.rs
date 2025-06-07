@@ -1,5 +1,7 @@
-#[allow(dead_code)]
-#[path = "src/rusty_hook.rs"]
+#![allow(unused_imports)]
+#![allow(dead_code)]
+
+#[path = "src/lib.rs"]
 mod rusty_hook;
 
 use std::process::exit;

@@ -7,12 +7,6 @@ Functional, but still in Beta!
 [![Downloads Badge][downloads-badge]][crate url]
 [![License Badge][license-badge]][crate url]
 
-[![Linux CI Badge][linux-ci-badge]][linux-ci-url]
-[![Mac CI Badge][mac-ci-badge]][mac-ci-url]
-[![Windows CI Badge][windows-ci-badge]][windows-ci-url]
-[![Test Results Badge][tests-badge]][tests-url]
-[![Coverage Badge][coverage-badge]][coverage-url]
-
 ## Quick Start
 Pre-requisites: Make sure you have Rust installed and that Cargo's bin directory is on your PATH.
 https://www.rust-lang.org/tools/install
