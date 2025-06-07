@@ -12,7 +12,7 @@ categories = [ "development-tools" ]
 rust-version = "1.82"
 
 [dependencies]
-ci_info = "0.14.5"
+ci_info = "0.14"
 nias = "0.7"
 rusty-hook = { path="..", package="rusty-hook-lib" }
-clap = { version="3", features=["derive"] }
+clap = { version="4", features=["derive"] }
