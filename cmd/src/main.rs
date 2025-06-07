@@ -6,17 +6,17 @@ use clap::Parser;
 #[derive(Parser)]
 #[clap(author, about, version)]
 enum RustyHookOpts {
-    /// Initialize rusty-hook's git hooks in the current directory.
+    /// Initialize rusty-hooks' git hooks in the current directory.
     #[clap(author, version)]
     Init {
         #[clap(long)]
         skip_hook_list: Option<String>,
     },
-    /// Print the current version of rusty-hook.
+    /// Print the current version of rusty-hooks.
     #[clap(author, version, alias = "-v")]
     Version,
     /// Run a git hook using the current directory's configuration.
-    /// Ran automatically by rusty-hook's git hooks.
+    /// Ran automatically by rusty-hooks' git hooks.
     #[clap(author, version)]
     Run {
         #[clap(long)]
@@ -28,7 +28,7 @@ enum RustyHookOpts {
 
 fn init(skip_hook_list: Option<String>) {
     if ci_info::is_ci() {
-        println!("[rusty-hook] CI Environment detected. Skipping hook install");
+        println!("[rusty-hooks] CI Environment detected. Skipping hook install");
         exit(0);
     }
 
@@ -36,14 +36,14 @@ fn init(skip_hook_list: Option<String>) {
         .as_deref()
         .map_or(vec![], |s| s.split(',').collect());
 
-    if let Err(err) = rusty_hook::init(
+    if let Err(err) = rusty_hooks::init(
         nias::get_command_runner(),
         nias::get_file_writer(),
         nias::get_file_existence_checker(),
         skip_hook_list,
     ) {
         eprintln!(
-            "[rusty-hook] Fatal error encountered during initialization. Details: {}",
+            "[rusty-hooks] Fatal error encountered during initialization. Details: {}",
             err
         );
         exit(1);
@@ -51,7 +51,7 @@ fn init(skip_hook_list: Option<String>) {
 }
 
 fn run(hook: String, args: Option<String>) {
-    if let Err(err) = rusty_hook::run(
+    if let Err(err) = rusty_hooks::run(
         nias::get_command_runner(),
         nias::get_file_existence_checker(),
         nias::get_file_reader(),
@@ -60,11 +60,11 @@ fn run(hook: String, args: Option<String>) {
         args,
     ) {
         match err {
-            Some(e) if e == rusty_hook::NO_CONFIG_FILE_FOUND => {
-                exit(rusty_hook::NO_CONFIG_FILE_FOUND_ERROR_CODE);
+            Some(err) if err == rusty_hooks::NO_CONFIG_FILE_FOUND => {
+                exit(rusty_hooks::NO_CONFIG_FILE_FOUND_ERROR_CODE);
             }
-            Some(e) => {
-                eprintln!("[rusty-hook] {}", e);
+            Some(err) => {
+                eprintln!("[rusty-hooks] {err}");
                 exit(1);
             }
             None => exit(1),

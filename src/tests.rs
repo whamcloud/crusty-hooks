@@ -149,7 +149,7 @@ mod run_tests {
 
     #[test]
     fn returns_error_on_invalid_config() {
-        let exp_err = "Invalid rusty-hook config file";
+        let exp_err = "Invalid rusty-hooks config file";
         let contents = "abc";
         let run_command = build_simple_command_runner(Ok(Some(String::from(""))));
         let read_file = |_file_path: &str| Ok(String::from(contents));
@@ -304,7 +304,7 @@ mod run_tests {
                         assert_eq!(c, &format!("echo {}", &params));
                         let env = env.unwrap();
                         assert_eq!(env.len(), 1);
-                        assert_eq!(env.get("RUSTY_HOOK_GIT_PARAMS").unwrap(), &params);
+                        assert_eq!(env.get("RUSTY_HOOKS_GIT_PARAMS").unwrap(), &params);
                     }
 
                     Ok(Some(hook_script.to_owned()))

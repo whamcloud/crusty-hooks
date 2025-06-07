@@ -23,7 +23,7 @@ mod find_config_file_tests {
     #[test]
     fn returns_correct_path_when_file_found() {
         let root_dir = "/usr/me/repos/foo";
-        let found_file = "rusty-hook.toml";
+        let found_file = "rusty-hooks.toml";
         let exp_path = format!("{}/{}", root_dir, found_file);
         let file_exists = |path: &str| {
             if path == exp_path {
@@ -103,7 +103,7 @@ mod create_config_file_tests {
     #[test]
     fn creates_specified_config_when_valid() {
         let root_dir = "/usr/mine/bar";
-        let desired_config = "rusty-hook.toml";
+        let desired_config = "rusty-hooks.toml";
         let exp_path = format!("{}/{}", root_dir, desired_config);
         let write_file = |file_path: &str, contents: &str, make_executable: bool| {
             assert_eq!(&exp_path, file_path);
