@@ -1,11 +1,9 @@
 # rusty-hooks
 Git hook utility for Rust codebases that lets you run any script for any git hook.
-This is forked from [rusty-hook](https://github.com/swellaby/rusty-hook) because that crate is unmaintend.
 
-Functional, but still in Beta!
+This is a fork of [rusty-hook](https://github.com/swellaby/rusty-hook) which seems to be unmaintained.
 
 [![Version Badge][version-badge]][crate url]
-[![Downloads Badge][downloads-badge]][crate url]
 [![License Badge][license-badge]][crate url]
 
 ## Quick Start
@@ -115,6 +113,8 @@ See https://github.com/kaimast/rusty-hooks#removing-rusty-hook for more informat
 
 Please also consider [opening an issue][create-issue] to report any bugs/problems you experienced, missing features, etc. so that we can work on improving `rusty-hooks`!
 
+[version-badge]: https://img.shields.io/crates/v/rusty-hooks.svg?style=flat-square
+[license-badge]: https://img.shields.io/crates/l/rusty-hook.svg?style=flat-square
 [crate url]: https://crates.io/crates/rusty-hooks
 [linux-ci-badge]: https://img.shields.io/github/workflow/status/kaimast/rusty-hooks/linux/main?label=linux%20build&style=flat-square
 [git hooks]: https://git-scm.com/docs/githooks#_hooks
