@@ -7,9 +7,9 @@ const MINIMUM_CLI_PATCH_VERSION: i32 = 0;
 const MINIMUM_CLI_VERSION_ALLOW_PRERELEASE: bool = false;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
-const HOOK_FILE_TEMPLATE: &str = include_str!("hook_files/hook_script.sh");
-const HOOK_CLI_SCRIPT_FILE_TEMPLATE: &str = include_str!("hook_files/cli.sh");
-const HOOK_SEMVER_SCRIPT_FILE_TEMPLATE: &str = include_str!("hook_files/semver.sh");
+const HOOK_FILE_TEMPLATE: &str = include_str!("hooks/files/hook_script.sh");
+const HOOK_CLI_SCRIPT_FILE_TEMPLATE: &str = include_str!("hooks/files/cli.sh");
+const HOOK_SEMVER_SCRIPT_FILE_TEMPLATE: &str = include_str!("hooks/files/semver.sh");
 
 const HOOK_NAMES: [&str; 19] = [
     "applypatch-msg",
@@ -60,7 +60,7 @@ fn get_semver_script_file_contents() -> String {
 }
 
 fn get_file_path(root_directory_path: &str, hooks_directory: &str, file: &str) -> String {
-    format!("{}/{}/{}", root_directory_path, hooks_directory, file)
+    format!("{root_directory_path}/{hooks_directory}/{file}")
 }
 
 pub fn create_hook_files<F>(
@@ -99,5 +99,4 @@ where
 }
 
 #[cfg(test)]
-#[path = "hooks_test.rs"]
-mod hooks_tests;
+mod tests;

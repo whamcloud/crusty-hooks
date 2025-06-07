@@ -8,6 +8,7 @@
 * Support specifying multiple commands for hook as an array [#116](https://github.com/swellaby/rusty-hook/pull/116)
 
 ### Changed
+* Moved CLI to separate crate
 * Switch to clap from getopts to provide a more user friendly CLI experience and to better support future features [#115](https://github.com/swellaby/rusty-hook/pull/115)
 * Include a `[rusty-hook]` prefix in logging output to better distinguish between rusty-hook and script/command output
 * update to latest dependency versions (minor/patch bumps) of `ci_info`, `toml`, and `nias`

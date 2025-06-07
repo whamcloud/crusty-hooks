@@ -1,11 +1,9 @@
 use std::env;
 use std::process::exit;
 
-use clap::Clap;
+use clap::Parser;
 
-mod rusty_hook;
-
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap(author, about, version)]
 enum RustyHookOpts {
     /// Initialize rusty-hook's git hooks in the current directory.

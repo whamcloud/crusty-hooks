@@ -169,5 +169,4 @@ pub fn get_hook_script(config_contents: &str, hook_name: &str) -> Result<String,
 }
 
 #[cfg(test)]
-#[path = "config_test.rs"]
-mod config_tests;
+mod tests;

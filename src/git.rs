@@ -1,7 +1,7 @@
 pub use hooks::NO_CONFIG_FILE_FOUND_ERROR_CODE;
 use std::collections::HashMap;
 
-mod hooks;
+use super::hooks;
 
 pub fn get_root_directory_path<F>(
     run_command: F,
@@ -71,5 +71,4 @@ where
 }
 
 #[cfg(test)]
-#[path = "git_test.rs"]
-mod git_tests;
+mod tests;

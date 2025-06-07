@@ -1,8 +1,7 @@
 use super::*;
-#[cfg(test)]
-use crate::rusty_hook::rusty_hook_tests::utils::{build_simple_command_runner, GIT_REV_PARSE_CMD};
 
-#[cfg(test)]
+use crate::tests::utils::{build_simple_command_runner, GIT_REV_PARSE_CMD};
+
 mod get_root_directory_path_tests {
     use super::*;
 
@@ -33,7 +32,6 @@ mod get_root_directory_path_tests {
     }
 }
 
-#[cfg(test)]
 mod get_hooks_directory_tests {
     use super::*;
 
@@ -64,7 +62,6 @@ mod get_hooks_directory_tests {
     }
 }
 
-#[cfg(test)]
 mod setup_hooks_tests {
     use super::*;
 
