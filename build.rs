@@ -2,7 +2,7 @@
 #![allow(dead_code)]
 
 #[path = "src/lib.rs"]
-mod rusty_hook;
+mod rusty_hooks;
 
 use std::process::exit;
 use std::{env, vec};
@@ -13,7 +13,7 @@ fn main() {
     };
 
     let target_directory = env::var("OUT_DIR").unwrap();
-    if let Err(err) = rusty_hook::init_directory(
+    if let Err(err) = rusty_hooks::init_directory(
         nias::get_command_runner(),
         nias::get_file_writer(),
         nias::get_file_existence_checker(),

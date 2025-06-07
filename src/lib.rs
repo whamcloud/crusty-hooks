@@ -121,7 +121,7 @@ where
         (Ok(script), Some(a)) => (
             script.replace("%rh!", &a),
             Some(
-                vec![("RUSTY_HOOK_GIT_PARAMS".to_owned(), a)]
+                vec![("RUSTY_HOOKS_GIT_PARAMS".to_owned(), a)]
                     .into_iter()
                     .collect::<HashMap<String, String>>(),
             ),
@@ -130,13 +130,12 @@ where
             if err == config::MISSING_CONFIG_KEY {
                 return Ok(());
             }
-            return Err(Some(String::from("Invalid rusty-hook config file")));
+            return Err(Some(String::from("Invalid rusty-hooks config file")));
         }
     };
 
     let message = format!(
-        "[rusty-hook] Found configured hook: {}\n[rusty-hook] Running command: {}\n",
-        hook_name, script
+        "[rusty-hooks] Found configured hook: {hook_name}\n[rusty-hooks] Running command: {script}\n"
     );
     log(&message, log_details);
 

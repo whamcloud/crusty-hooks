@@ -1,8 +1,8 @@
 [package]
-name = "rusty-hook-lib"
+name = "rusty-hooks-lib"
 version = "0.12.0"
 authors = ["Kai Mast <kai@kaimast.com>", "Swellaby <opensource@swellaby.com>"]
-description = "Utility functions for rusty-hook"
+description = "Utility functions for rusty-hooks"
 license = "MIT"
 repository = "https://github.com/kaimast/rusty-hook"
 readme = "README.md"

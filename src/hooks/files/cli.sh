@@ -1,5 +1,5 @@
 #!/bin/sh
-# rusty-hook
+# rusty-hooks
 # version {{VERSION}}
 
 # shellcheck disable=SC2170,SC1083
@@ -13,53 +13,53 @@ allowPrereleaseCliVersion={{MINIMUM_ALLOW_PRE}}
 # shellcheck disable=SC2170,SC1083
 noConfigFileExitCode={{NO_CONFIG_FILE_EXIT_CODE}}
 
-upgradeRustyHookCli() {
-  echo "[rusty-hook] Upgrading rusty-hook cli..."
-  echo "[rusty-hook] This may take a few seconds..."
+upgradeRustyHooksCli() {
+  echo "[rusty-hooks] Upgrading rusty-hook cli..."
+  echo "[rusty-hooks] This may take a few seconds..."
   cargo install --force rusty-hook >/dev/null 2>&1
 }
 
-installRustyHookCli() {
-  echo "[rusty-hook] Finalizing rusty-hook configuration..."
-  echo "[rusty-hook] This may take a few seconds..."
-  cargo install rusty-hook >/dev/null 2>&1
+installRustyHooksCli() {
+  echo "[rusty-hooks] Finalizing rusty-hooks configuration..."
+  echo "[rusty-hooks] This may take a few seconds..."
+  cargo install rusty-hooks >/dev/null 2>&1
 }
 
-ensureMinimumRustyHookCliVersion() {
-  currentVersion=$(rusty-hook -v)
+ensureMinimumRustyHooksCliVersion() {
+  currentVersion=$(rusty-hooks -v)
   isGreaterThanEqualToMinimumVersion "${currentVersion}" ${minimumMajorCliVersion} ${minimumMinorCliVersion} ${minimumPatchCliVersion} ${allowPrereleaseCliVersion} >/dev/null 2>&1
   versionCompliance=$?
   if [ ${versionCompliance} -gt 0 ]; then
-    upgradeRustyHookCli || true
+    upgradeRustyHooksCli || true
   fi
 }
 
-handleRustyHookCliResult() {
-  rustyHookExitCode=${1}
+handleRustyHooksCliResult() {
+  rustyHooksExitCode=${1}
   hookName=${2}
 
   # shellcheck disable=SC2086
-  if [ ${rustyHookExitCode} -eq 0 ]; then
+  if [ ${rustyHooksExitCode} -eq 0 ]; then
     exit 0
   fi
 
   # shellcheck disable=SC2086
-  if [ ${rustyHookExitCode} -eq ${noConfigFileExitCode} ]; then
+  if [ ${rustyHooksExitCode} -eq ${noConfigFileExitCode} ]; then
     if [ "${hookName}" = "pre-commit" ]; then
-      echo "[rusty-hook] rusty-hook git hooks are configured, but no config file was found"
-      echo "[rusty-hook] In order to use rusty-hook, your project must have a config file"
-      echo "[rusty-hook] See https://github.com/swellaby/rusty-hook#configure for more information about configuring rusty-hook"
+      echo "[rusty-hooks] rusty-hooks git hooks are configured, but no config file was found"
+      echo "[rusty-hooks] In order to use rusty-hooks, your project must have a config file"
+      echo "[rusty-hooks] See https://github.com/kaimast/rusty-hooks#configure for more information about configuring rusty-hooks"
       echo
-      echo "[rusty-hook] If you were trying to remove rusty-hook, then you should also delete the git hook files to remove this warning"
-      echo "[rusty-hook] See https://github.com/swellaby/rusty-hook#removing-rusty-hook for more information about removing rusty-hook from your project"
+      echo "[rusty-hooks] If you were trying to remove rusty-hooks, then you should also delete the git hook files to remove this warning"
+      echo "[rusty-hooks] See https://github.com/kaimast/rusty-hooks#removing-rusty-hooks for more information about removing rusty-hook from your project"
       echo
     fi
     exit 0
   else
-    echo "[rusty-hook] Configured hook command failed"
-    echo "[rusty-hook] ${hookName} hook rejected"
+    echo "[rusty-hooks] Configured hook command failed"
+    echo "[rusty-hooks] ${hookName} hook rejected"
     # shellcheck disable=SC2086
-    exit ${rustyHookExitCode}
+    exit ${rustyHooksExitCode}
   fi
 }
 
