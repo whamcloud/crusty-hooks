@@ -12,11 +12,11 @@ categories = [ "development-tools" ]
 rust-version = "1.82"
 
 [dependencies]
-toml = "0.5"
+toml = "0.8"
 
 [build-dependencies]
 ci_info = "0.14"
-toml = "0.5"
+toml = "0.8"
 nias = "0.7"
 
 [workspace]
