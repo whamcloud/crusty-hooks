@@ -14,5 +14,8 @@ rust-version = "1.82"
 [dependencies]
 ci_info = "0.14"
 nias = "0.7"
-rusty-hooks = { path="..", package="rusty-hooks-lib" }
 clap = { version="4", features=["derive"] }
+
+[dependencies.rusty-hooks]
+path=".."
+package="rusty-hooks-integration"

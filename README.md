@@ -18,11 +18,11 @@ https://www.rust-lang.org/tools/install
     - **note the very first (and only) time you do this will take an extra ~30 seconds or so to finalize the setup**
 
 ## Setup
-Just add `rusty-hooks` as a dev dependency in your Cargo.toml file:
+Just add `rusty-hooks-integration` as a dev dependency in your Cargo.toml file:
 
 ```toml
 [dev-dependencies]
-rusty-hooks = "^0.12"
+rusty-hooks-integration = "0.12"
 ```
 
 ## Initialize
@@ -40,6 +40,11 @@ This may take a few seconds...
 You can also install the `rusty-hooks` cli with cargo:
 ```sh
 cargo install rusty-hooks
+```
+
+Or you can directly install it from source
+```sh
+cargo install --path=cmd
 ```
 
 You can optionally manually initialize any git directory by running the `init` command in any git directory to set it up:
