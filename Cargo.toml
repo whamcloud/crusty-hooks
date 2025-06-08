@@ -1,5 +1,5 @@
 [package]
-name = "rusty-hooks-lib"
+name = "rusty-hooks-integration"
 version = "0.12.0"
 authors = ["Kai Mast <kai@kaimast.com>", "Swellaby <opensource@swellaby.com>"]
 description = "Utility functions for rusty-hooks"
