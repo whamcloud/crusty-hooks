@@ -119,7 +119,7 @@ See https://github.com/kaimast/rusty-hooks#removing-rusty-hook for more informat
 Please also consider [opening an issue][create-issue] to report any bugs/problems you experienced, missing features, etc. so that we can work on improving `rusty-hooks`!
 
 [version-badge]: https://img.shields.io/crates/v/rusty-hooks.svg?style=flat-square
-[license-badge]: https://img.shields.io/crates/l/rusty-hook.svg?style=flat-square
+[license-badge]: https://img.shields.io/crates/l/rusty-hooks.svg?style=flat-square
 [crate url]: https://crates.io/crates/rusty-hooks
 [linux-ci-badge]: https://img.shields.io/github/workflow/status/kaimast/rusty-hooks/linux/main?label=linux%20build&style=flat-square
 [git hooks]: https://git-scm.com/docs/githooks#_hooks
@@ -130,4 +130,4 @@ Please also consider [opening an issue][create-issue] to report any bugs/problem
 [git_hooks crate]: https://crates.io/crates/git_hooks
 [cratesio]: https://crates.io
 [contributing]: .github/CONTRIBUTING.md
-[create-issue]: https://github.com/swellaby/rusty-hook/issues/new/choose
+[create-issue]: https://github.com/swellaby/rusty-hooks/issues/new/choose
