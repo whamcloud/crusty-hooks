@@ -1,5 +1,5 @@
 #!/bin/sh
-# rusty-hooks
+# crusty-hooks
 # version {{VERSION}}
 
 isGreaterThanEqualToMinimumVersion() {

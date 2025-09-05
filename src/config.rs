@@ -1,22 +1,19 @@
-use toml::Value;
+use std::collections::HashMap;
 
 const CONFIG_FILE_TEMPLATE: &str = "[hooks]
-pre-commit = \"cargo test\"
+pre-commit = [
+  [\"cargo test\"]
+]
 
 [logging]
 verbose = true
 ";
 
-const DEFAULT_CONFIG_FILE_NAME: &str = ".rusty-hooks.toml";
-const CONFIG_FILE_NAMES: [&str; 4] = [
-    DEFAULT_CONFIG_FILE_NAME,
-    "rusty-hooks.toml",
-    ".rusty-hook.toml",
-    "rusty-hook.toml",
-];
+const DEFAULT_CONFIG_FILE_NAME: &str = ".crusty-hooks.toml";
+const CONFIG_FILE_NAMES: [&str; 2] = [DEFAULT_CONFIG_FILE_NAME, "crusty-hooks.toml"];
 pub const NO_CONFIG_FILE_FOUND: &str = "No config file found";
-pub const MISSING_CONFIG_KEY: &str = "Missing config key";
-pub const FATAL_ERROR_DURING_CONFIG_LOOKUP: &str =
+
+pub(crate) const FATAL_ERROR_DURING_CONFIG_LOOKUP: &str =
     "Fatal error encountered while looking for existing config";
 
 fn find_config_file<F>(root_directory_path: &str, file_exists: F) -> Result<String, String>
@@ -40,7 +37,7 @@ where
     Ok(String::from(NO_CONFIG_FILE_FOUND))
 }
 
-pub fn create_default_config_file<F, G>(
+pub(super) fn create_default_config_file<F, G>(
     write_file: F,
     file_exists: G,
     root_directory_path: &str,
@@ -57,7 +54,7 @@ where
     )
 }
 
-pub fn create_config_file<F, G>(
+pub(super) fn create_config_file<F, G>(
     write_file: F,
     file_exists: G,
     root_directory_path: &str,
@@ -99,7 +96,18 @@ where
     Ok(())
 }
 
-pub fn get_config_file_contents<F, G>(
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct ConfigFile {
+    pub hooks: HashMap<String, Vec<Vec<String>>>,
+}
+
+impl ConfigFile {
+    pub fn try_from_str(x: &str) -> Result<Self, toml::de::Error> {
+        toml::from_str::<Self>(x)
+    }
+}
+
+pub(super) fn get_config_file_contents<F, G>(
     read_file: F,
     file_exists: G,
     root_directory_path: &str,
@@ -124,54 +132,3 @@ where
         Err(_) => Err(String::from("Failure reading file")),
     }
 }
-
-fn get_table_key_value_from_config(
-    config_contents: &str,
-    table: &str,
-    key: &str,
-) -> Result<Value, String> {
-    let value = match config_contents.parse::<Value>() {
-        Ok(val) => val,
-        Err(_) => return Err(String::from("Error parsing config file")),
-    };
-
-    let config = value.as_table().unwrap();
-    if !config.contains_key(table) {
-        return Err(String::from("Missing config table"));
-    };
-
-    if !value[table].as_table().unwrap().contains_key(key) {
-        return Err(String::from(MISSING_CONFIG_KEY));
-    };
-
-    Ok(value[table][key].clone())
-}
-
-pub fn get_log_setting(config_contents: &str) -> bool {
-    match get_table_key_value_from_config(config_contents, "logging", "verbose") {
-        Err(_) => true,
-        Ok(value) => value.as_bool().unwrap_or(true),
-    }
-}
-
-pub fn get_hook_script(config_contents: &str, hook_name: &str) -> Result<String, String> {
-    match get_table_key_value_from_config(config_contents, "hooks", hook_name) {
-        Err(err) => Err(err),
-        Ok(value) => match value {
-            Value::String(script) => Ok(script),
-            Value::Array(val) => Ok(val
-                .iter()
-                .map(|v| v.as_str())
-                .collect::<Option<Vec<_>>>()
-                .ok_or(format!(
-                    "Invalid hook config for {}. An element in the array is not a string",
-                    hook_name
-                ))?
-                .join(" && ")),
-            _ => Err(String::from("Invalid hook config")),
-        },
-    }
-}
-
-#[cfg(test)]
-mod tests;

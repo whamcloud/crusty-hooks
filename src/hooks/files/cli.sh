@@ -1,5 +1,5 @@
 #!/bin/sh
-# rusty-hooks
+# crusty-hooks
 # version {{VERSION}}
 
 # shellcheck disable=SC2170,SC1083
@@ -14,19 +14,19 @@ allowPrereleaseCliVersion={{MINIMUM_ALLOW_PRE}}
 noConfigFileExitCode={{NO_CONFIG_FILE_EXIT_CODE}}
 
 upgradeRustyHooksCli() {
-  echo "[rusty-hooks] Upgrading rusty-hook cli..."
-  echo "[rusty-hooks] This may take a few seconds..."
-  cargo install --force rusty-hook >/dev/null 2>&1
+  echo "[crusty-hooks] Upgrading crusty-hook cli..."
+  echo "[crusty-hooks] This may take a few seconds..."
+  cargo install --force crusty-hook >/dev/null 2>&1
 }
 
 installRustyHooksCli() {
-  echo "[rusty-hooks] Finalizing rusty-hooks configuration..."
-  echo "[rusty-hooks] This may take a few seconds..."
-  cargo install rusty-hooks >/dev/null 2>&1
+  echo "[crusty-hooks] Finalizing crusty-hooks configuration..."
+  echo "[crusty-hooks] This may take a few seconds..."
+  cargo install crusty-hooks >/dev/null 2>&1
 }
 
 ensureMinimumRustyHooksCliVersion() {
-  currentVersion=$(rusty-hooks -v)
+  currentVersion=$(crusty-hooks -v)
   isGreaterThanEqualToMinimumVersion "${currentVersion}" ${minimumMajorCliVersion} ${minimumMinorCliVersion} ${minimumPatchCliVersion} ${allowPrereleaseCliVersion} >/dev/null 2>&1
   versionCompliance=$?
   if [ ${versionCompliance} -gt 0 ]; then
@@ -46,18 +46,18 @@ handleRustyHooksCliResult() {
   # shellcheck disable=SC2086
   if [ ${rustyHooksExitCode} -eq ${noConfigFileExitCode} ]; then
     if [ "${hookName}" = "pre-commit" ]; then
-      echo "[rusty-hooks] rusty-hooks git hooks are configured, but no config file was found"
-      echo "[rusty-hooks] In order to use rusty-hooks, your project must have a config file"
-      echo "[rusty-hooks] See https://github.com/kaimast/rusty-hooks#configure for more information about configuring rusty-hooks"
+      echo "[crusty-hooks] crusty-hooks git hooks are configured, but no config file was found"
+      echo "[crusty-hooks] In order to use crusty-hooks, your project must have a config file"
+      echo "[crusty-hooks] See https://github.com/whamcloud/crusty-hooks#configure for more information about configuring crusty-hooks"
       echo
-      echo "[rusty-hooks] If you were trying to remove rusty-hooks, then you should also delete the git hook files to remove this warning"
-      echo "[rusty-hooks] See https://github.com/kaimast/rusty-hooks#removing-rusty-hooks for more information about removing rusty-hook from your project"
+      echo "[crusty-hooks] If you were trying to remove crusty-hooks, then you should also delete the git hook files to remove this warning"
+      echo "[crusty-hooks] See https://github.com/whamcloud/crusty-hooks#removing-crusty-hooks for more information about removing rusty-hook from your project"
       echo
     fi
     exit 0
   else
-    echo "[rusty-hooks] Configured hook command failed"
-    echo "[rusty-hooks] ${hookName} hook rejected"
+    echo "[crusty-hooks] Configured hook command failed"
+    echo "[crusty-hooks] ${hookName} hook rejected"
     # shellcheck disable=SC2086
     exit ${rustyHooksExitCode}
   fi

@@ -1,7 +1,6 @@
 use super::*;
 
 const EXP_NO_CONFIG_FILE_FOUND_ERROR_CODE: i32 = 3;
-
 const EXP_VERSION: &str = env!("CARGO_PKG_VERSION");
 const EXP_HOOK_FILE_TEMPLATE: &str = include_str!("files/hook_script.sh");
 const EXP_HOOK_CLI_SCRIPT_FILE_TEMPLATE: &str = include_str!("files/cli.sh");
@@ -34,7 +33,7 @@ const EXP_CLI_SCRIPT_NAME: &str = "cli.sh";
 const EXP_SEMVER_SCRIPT_NAME: &str = "semver.sh";
 
 const EXP_MINIMUM_CLI_MAJOR_VERSION: i32 = 0;
-const EXP_MINIMUM_CLI_MINOR_VERSION: i32 = 12;
+const EXP_MINIMUM_CLI_MINOR_VERSION: i32 = 1;
 const EXP_MINIMUM_CLI_PATCH_VERSION: i32 = 0;
 const EXP_MINIMUM_CLI_VERSION_ALLOW_PRERELEASE: bool = false;
 

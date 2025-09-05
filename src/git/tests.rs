@@ -1,6 +1,6 @@
 use super::*;
 
-use crate::tests::utils::{build_simple_command_runner, GIT_REV_PARSE_CMD};
+use crate::tests::utils::{GIT_REV_PARSE_CMD, build_simple_command_runner};
 
 mod get_root_directory_path_tests {
     use super::*;

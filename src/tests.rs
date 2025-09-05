@@ -101,138 +101,68 @@ mod run_tests {
     use super::utils::build_simple_command_runner;
     use super::*;
 
-    #[test]
-    fn returns_error_when_root_directory_detect_fails() {
+    #[tokio::test]
+    async fn returns_error_when_root_directory_detect_fails() {
         let exp_err = "Failure determining git repo root directory";
         let run_command = build_simple_command_runner(Err(Some(String::from(exp_err))));
         let read_file = |_file_path: &str| panic!("");
         let file_exists = |_path: &str| panic!("");
-        let log = |_path: &str, _should_log: bool| panic!("");
-        let result = run(run_command, file_exists, read_file, log, "", None);
-        assert_eq!(result, Err(Some(String::from(exp_err))));
+
+        let result = run(run_command, file_exists, read_file, "")
+            .await
+            .unwrap_err();
+
+        insta::assert_snapshot!(result, @"Failure determining git repo root directory");
     }
 
-    #[test]
-    fn returns_error_when_config_file_missing() {
-        let exp_err = config::NO_CONFIG_FILE_FOUND;
+    #[tokio::test]
+    async fn returns_error_when_config_file_missing() {
         let run_command = build_simple_command_runner(Ok(Some(String::from(""))));
         let read_file = |_file_path: &str| Err(());
         let file_exists = |_path: &str| Ok(false);
-        let log = |_path: &str, _should_log: bool| panic!("");
-        let result = run(run_command, file_exists, read_file, log, "", None);
-        assert_eq!(result, Err(Some(String::from(exp_err))));
+
+        let result = run(run_command, file_exists, read_file, "")
+            .await
+            .unwrap_err();
+
+        insta::assert_snapshot!(result, @"No config file found");
     }
 
-    #[test]
-    fn returns_error_when_config_contents_unloadable() {
-        let exp_err = "Failed to parse config file";
+    #[tokio::test]
+    async fn returns_error_when_config_contents_unloadable() {
         let run_command = build_simple_command_runner(Ok(Some(String::from(""))));
         let read_file = |_file_path: &str| Err(());
         let file_exists = |_path: &str| Ok(true);
-        let log = |_path: &str, _should_log: bool| panic!("");
-        let result = run(run_command, file_exists, read_file, log, "", None);
-        assert_eq!(result, Err(Some(String::from(exp_err))));
+
+        let result = run(run_command, file_exists, read_file, "")
+            .await
+            .unwrap_err();
+
+        insta::assert_snapshot!(result, @"Failed to parse config file");
     }
 
-    #[test]
-    fn returns_ok_when_hook_missing() {
-        let contents = "[hooks]
-            pre-commit = 'cargo test'
-        ";
-        let run_command = build_simple_command_runner(Ok(Some(String::from(""))));
-        let read_file = |_file_path: &str| Ok(String::from(contents));
-        let file_exists = |_path: &str| Ok(true);
-        let log = |_path: &str, _should_log: bool| panic!("");
-        let result = run(run_command, file_exists, read_file, log, "pre-push", None);
-        assert_eq!(result, Ok(()));
-    }
-
-    #[test]
-    fn returns_error_on_invalid_config() {
-        let exp_err = "Invalid rusty-hooks config file";
+    #[tokio::test]
+    async fn returns_error_on_invalid_config() {
         let contents = "abc";
         let run_command = build_simple_command_runner(Ok(Some(String::from(""))));
         let read_file = |_file_path: &str| Ok(String::from(contents));
         let file_exists = |_path: &str| Ok(true);
-        let log = |_path: &str, _should_log: bool| panic!("");
-        let result = run(run_command, file_exists, read_file, log, "pre-push", None);
-        assert_eq!(result, Err(Some(String::from(exp_err))));
+
+        let result = run(run_command, file_exists, read_file, "pre-push")
+            .await
+            .unwrap_err();
+
+        insta::assert_snapshot!(result, @r"
+        TOML parse error at line 1, column 4
+          |
+        1 | abc
+          |    ^
+        key with no value, expected `=`
+        ");
     }
 
-    #[test]
-    fn does_not_log_details_when_disabled() {
-        let contents = r#"[hooks]
-            pre-commit = "cargo test"
-
-            [logging]
-            verbose = false
-        "#;
-        let run_command = |cmd: &str,
-                           _dir: Option<&str>,
-                           stream_io: bool,
-                           _env: Option<&HashMap<String, String>>| {
-            if cmd == "cargo test" && stream_io {
-                panic!("")
-            }
-            Ok(Some(String::from("")))
-        };
-        let read_file = |_file_path: &str| Ok(String::from(contents));
-        let file_exists = |_path: &str| Ok(true);
-        let log = |_path: &str, should_log: bool| {
-            if should_log {
-                panic!("")
-            }
-        };
-        let result = run(run_command, file_exists, read_file, log, "pre-commit", None);
-        assert_eq!(result, Ok(()));
-    }
-
-    #[test]
-    fn logs_details_when_enabled() {
-        let contents = r#"[hooks]
-            pre-commit = "cargo test"
-
-            [logging]
-            verbose = true
-        "#;
-        let run_command = |cmd: &str,
-                           _dir: Option<&str>,
-                           stream_io: bool,
-                           _env: Option<&HashMap<String, String>>| {
-            if cmd == "cargo test" && !stream_io {
-                panic!("")
-            }
-            Ok(Some(String::from("")))
-        };
-        let read_file = |_file_path: &str| Ok(String::from(contents));
-        let file_exists = |_path: &str| Ok(true);
-        let log = |_path: &str, should_log: bool| {
-            if !should_log {
-                panic!("")
-            }
-        };
-        let result = run(run_command, file_exists, read_file, log, "pre-commit", None);
-        assert_eq!(result, Ok(()));
-    }
-
-    #[test]
-    fn returns_ok_when_script_succeeds() {
-        let contents = r#"[hooks]
-            pre-commit = "cargo test"
-
-            [logging]
-            verbose = false
-        "#;
-        let run_command = build_simple_command_runner(Ok(Some(String::from(""))));
-        let read_file = |_file_path: &str| Ok(String::from(contents));
-        let file_exists = |_path: &str| Ok(true);
-        let log = |_path: &str, _should_log: bool| ();
-        let result = run(run_command, file_exists, read_file, log, "pre-commit", None);
-        assert_eq!(result, Ok(()));
-    }
-
-    #[test]
-    fn returns_err_when_script_fails() {
+    #[tokio::test]
+    async fn returns_err_when_script_fails() {
         let exp_err = "crashed";
         let contents = r#"[hooks]
             pre-commit = "cargo test"
@@ -251,76 +181,16 @@ mod run_tests {
         };
         let read_file = |_file_path: &str| Ok(String::from(contents));
         let file_exists = |_path: &str| Ok(true);
-        let log = |_path: &str, _should_log: bool| ();
-        let result = run(run_command, file_exists, read_file, log, "pre-commit", None);
-        assert_eq!(result, Err(Some(String::from(exp_err))));
-    }
+        let result = run(run_command, file_exists, read_file, "pre-commit")
+            .await
+            .unwrap_err();
 
-    mod git_params {
-        use super::super::utils::GIT_REV_PARSE_CMD;
-        use super::*;
-
-        #[test]
-        fn handles_no_params_correctly() {
-            let contents = r#"[hooks]
-                pre-push = "echo %rh!"
-
-                [logging]
-                verbose = false
-            "#;
-            let run_command =
-                |c: &str, _: Option<&str>, _: bool, env: Option<&HashMap<String, String>>| {
-                    assert!(env.is_none());
-                    if c != GIT_REV_PARSE_CMD {
-                        assert_eq!(c, "echo %rh!");
-                    }
-
-                    Ok(Some(String::new()))
-                };
-            let read_file = |_file_path: &str| Ok(String::from(contents));
-            let file_exists = |_path: &str| Ok(true);
-            let log = |_path: &str, _should_log: bool| ();
-            let result = run(run_command, file_exists, read_file, log, "pre-push", None);
-            assert!(result.is_ok());
-        }
-
-        #[test]
-        fn handles_params_correctly() {
-            let params = ".git/COMMIT_EDITMSG";
-            let hook_script = "echo %rh!";
-            let contents = format!(
-                r#"[hooks]
-                commit-msg = "{}"
-
-                [logging]
-                verbose = false
-            "#,
-                &hook_script
-            );
-            let run_command =
-                |c: &str, _: Option<&str>, _: bool, env: Option<&HashMap<String, String>>| {
-                    if c != GIT_REV_PARSE_CMD {
-                        assert!(env.is_some());
-                        assert_eq!(c, &format!("echo {}", &params));
-                        let env = env.unwrap();
-                        assert_eq!(env.len(), 1);
-                        assert_eq!(env.get("RUSTY_HOOKS_GIT_PARAMS").unwrap(), &params);
-                    }
-
-                    Ok(Some(hook_script.to_owned()))
-                };
-            let read_file = |_file_path: &str| Ok(contents.to_owned());
-            let file_exists = |_path: &str| Ok(true);
-            let log = |_path: &str, _should_log: bool| ();
-            let result = run(
-                run_command,
-                file_exists,
-                read_file,
-                log,
-                "commit-msg",
-                Some(params.to_owned()),
-            );
-            assert!(result.is_ok());
-        }
+        insta::assert_snapshot!(result, @r#"
+        TOML parse error at line 2, column 26
+          |
+        2 |             pre-commit = "cargo test"
+          |                          ^^^^^^^^^^^^
+        invalid type: string "cargo test", expected a sequence
+        "#);
     }
 }

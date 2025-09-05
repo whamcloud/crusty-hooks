@@ -1,9 +1,7 @@
-pub use hooks::NO_CONFIG_FILE_FOUND_ERROR_CODE;
+use super::hooks;
 use std::collections::HashMap;
 
-use super::hooks;
-
-pub fn get_root_directory_path<F>(
+pub(crate) fn get_root_directory_path<F>(
     run_command: F,
     target_directory: Option<&str>,
 ) -> Result<Option<String>, Option<String>>
@@ -43,7 +41,7 @@ where
     )
 }
 
-pub fn setup_hooks<F, G>(
+pub(super) fn setup_hooks<F, G>(
     run_command: F,
     write_file: G,
     root_directory_path: &str,

@@ -23,7 +23,7 @@ mod find_config_file_tests {
     #[test]
     fn returns_correct_path_when_file_found() {
         let root_dir = "/usr/me/repos/foo";
-        let found_file = "rusty-hooks.toml";
+        let found_file = "crusty-hooks.toml";
         let exp_path = format!("{}/{}", root_dir, found_file);
         let file_exists = |path: &str| {
             if path == exp_path {
@@ -103,7 +103,7 @@ mod create_config_file_tests {
     #[test]
     fn creates_specified_config_when_valid() {
         let root_dir = "/usr/mine/bar";
-        let desired_config = "rusty-hooks.toml";
+        let desired_config = "crusty-hooks.toml";
         let exp_path = format!("{}/{}", root_dir, desired_config);
         let write_file = |file_path: &str, contents: &str, make_executable: bool| {
             assert_eq!(&exp_path, file_path);
@@ -247,8 +247,16 @@ mod get_hook_script_tests {
     #[test]
     fn returns_err_when_content_not_found() {
         let invalid_contents = "abc";
-        let result = get_hook_script(invalid_contents, "");
-        assert_eq!(result, Err(String::from("Error parsing config file")));
+
+        let e = ConfigFile::try_from_str(invalid_contents).unwrap_err();
+
+        insta::assert_snapshot!(e, @r"
+        TOML parse error at line 1, column 4
+          |
+        1 | abc
+          |    ^
+        key with no value, expected `=`
+        ");
     }
 
     #[test]
@@ -256,29 +264,70 @@ mod get_hook_script_tests {
         let contents = "[hooks]
             pre-push = false
         ";
-        let result = get_hook_script(contents, "pre-push");
-        assert_eq!(result, Err(String::from("Invalid hook config")));
+        let e = ConfigFile::try_from_str(contents).unwrap_err();
+
+        insta::assert_snapshot!(e, @r"
+        TOML parse error at line 2, column 24
+          |
+        2 |             pre-push = false
+          |                        ^^^^^
+        invalid type: boolean `false`, expected a sequence
+        ");
     }
 
     #[test]
     fn returns_result_when_value_valid() {
         let contents = r#"[hooks]
-            pre-commit = "cargo test"
+            pre-commit = [
+                ["cargo test"]
+            ]
+
+            [logging]
+            verbose = false
         "#;
-        let result = get_hook_script(contents, "pre-commit");
-        assert_eq!(result.unwrap(), "cargo test");
+
+        let xs = ConfigFile::try_from_str(contents).unwrap();
+
+        insta::assert_debug_snapshot!(xs, @r#"
+        ConfigFile {
+            logging: Logging {
+                verbose: false,
+            },
+            hooks: {
+                "pre-commit": [
+                    [
+                        "cargo test",
+                    ],
+                ],
+            },
+        }
+        "#);
     }
 
     #[test]
     fn returns_result_when_value_array() {
         let contents = r#"[hooks]
-            pre-commit = [
+            pre-commit = [[
                 "cargo test",
                 "cargo fmt"
-            ]
+            ]]
         "#;
-        let result = get_hook_script(contents, "pre-commit");
-        assert_eq!(result.unwrap(), "cargo test && cargo fmt");
+
+        let xs = ConfigFile::try_from_str(contents).unwrap();
+
+        insta::assert_debug_snapshot!(xs, @r#"
+        ConfigFile {
+            logging: None,
+            hooks: {
+                "pre-commit": [
+                    [
+                        "cargo test",
+                        "cargo fmt",
+                    ],
+                ],
+            },
+        }
+        "#);
     }
 
     #[test]
@@ -289,12 +338,15 @@ mod get_hook_script_tests {
                 8
             ]
         "#;
-        let result = get_hook_script(contents, "pre-commit");
-        assert_eq!(
-            result,
-            Err(String::from(
-                "Invalid hook config for pre-commit. An element in the array is not a string"
-            ))
-        );
+
+        let e = ConfigFile::try_from_str(contents).unwrap_err();
+
+        insta::assert_snapshot!(e, @r#"
+        TOML parse error at line 3, column 17
+          |
+        3 |                 "cargo test",
+          |                 ^^^^^^^^^^^^
+        invalid type: string "cargo test", expected a sequence
+        "#);
     }
 }

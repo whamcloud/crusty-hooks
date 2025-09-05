@@ -1,8 +1,8 @@
-pub const HOOK_CREATION_ERROR: &str =
+pub(crate) const HOOK_CREATION_ERROR: &str =
     "Fatal error encountered while trying to create git hook files";
-pub const NO_CONFIG_FILE_FOUND_ERROR_CODE: i32 = 3;
+pub const NO_CONFIG_FILE_FOUND_ERROR_CODE: u8 = 3;
 const MINIMUM_CLI_MAJOR_VERSION: i32 = 0;
-const MINIMUM_CLI_MINOR_VERSION: i32 = 12;
+const MINIMUM_CLI_MINOR_VERSION: i32 = 1;
 const MINIMUM_CLI_PATCH_VERSION: i32 = 0;
 const MINIMUM_CLI_VERSION_ALLOW_PRERELEASE: bool = false;
 
@@ -11,7 +11,7 @@ const HOOK_FILE_TEMPLATE: &str = include_str!("hooks/files/hook_script.sh");
 const HOOK_CLI_SCRIPT_FILE_TEMPLATE: &str = include_str!("hooks/files/cli.sh");
 const HOOK_SEMVER_SCRIPT_FILE_TEMPLATE: &str = include_str!("hooks/files/semver.sh");
 
-const HOOK_NAMES: [&str; 19] = [
+pub const HOOK_NAMES: [&str; 19] = [
     "applypatch-msg",
     "pre-applypatch",
     "post-applypatch",
@@ -63,7 +63,7 @@ fn get_file_path(root_directory_path: &str, hooks_directory: &str, file: &str) -
     format!("{root_directory_path}/{hooks_directory}/{file}")
 }
 
-pub fn create_hook_files<F>(
+pub(super) fn create_hook_files<F>(
     write_file: F,
     root_directory_path: &str,
     hooks_directory: &str,
